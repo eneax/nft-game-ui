@@ -1,10 +1,6 @@
 import React from "react";
-import twitterLogo from "./assets/twitter-logo.svg";
-import "./App.css";
 
-// Constants
-const TWITTER_HANDLE = "_buildspace";
-const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
+import "./App.css";
 
 const App = () => {
   return (
@@ -20,14 +16,16 @@ const App = () => {
             />
           </div>
         </div>
+
         <div className="footer-container">
-          <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
           <a
             className="footer-text"
-            href={TWITTER_LINK}
+            href="https://eneaxharja.com"
             target="_blank"
             rel="noreferrer"
-          >{`built with @${TWITTER_HANDLE}`}</a>
+          >
+            eneaxharja.com
+          </a>
         </div>
       </div>
     </div>
