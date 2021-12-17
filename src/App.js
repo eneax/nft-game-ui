@@ -1,10 +1,12 @@
 import React from "react";
 
 import "./App.css";
+import SelectCharacter from "./Components/SelectCharacter";
 
 const App = () => {
   // State
   const [currentAccount, setCurrentAccount] = React.useState(null);
+  const [characterNFT, setCharacterNFT] = React.useState(null);
 
   // Actions
   const checkIfWalletIsConnected = async () => {
@@ -58,6 +60,34 @@ const App = () => {
     }
   };
 
+  // Render Methods
+  const renderContent = () => {
+    /*
+     * Scenario #1
+     */
+    if (!currentAccount) {
+      return (
+        <div className="connect-wallet-container">
+          <img
+            src="https://64.media.tumblr.com/tumblr_mbia5vdmRd1r1mkubo1_500.gifv"
+            alt="Monty Python Gif"
+          />
+          <button
+            className="cta-button connect-wallet-button"
+            onClick={connectWalletAction}
+          >
+            Connect Wallet To Get Started
+          </button>
+        </div>
+      );
+      /*
+       * Scenario #2
+       */
+    } else if (currentAccount && !characterNFT) {
+      return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+    }
+  };
+
   React.useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -68,18 +98,7 @@ const App = () => {
         <div className="header-container">
           <p className="header gradient-text">⚔️ Metaverse Slayer ⚔️</p>
           <p className="sub-text">Team up to protect the Metaverse!</p>
-          <div className="connect-wallet-container">
-            <img
-              src="https://64.media.tumblr.com/tumblr_mbia5vdmRd1r1mkubo1_500.gifv"
-              alt="Monty Python Gif"
-            />
-            <button
-              className="cta-button connect-wallet-button"
-              onClick={connectWalletAction}
-            >
-              Connect Wallet To Get Started
-            </button>
-          </div>
+          {renderContent()}
         </div>
 
         <div className="footer-container">
