@@ -100,6 +100,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
         gameContract.off("AttackComplete", onAttackComplete);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameContract]);
 
   return (
