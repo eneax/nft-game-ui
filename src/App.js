@@ -6,6 +6,7 @@ import { CONTRACT_ADDRESS, transformCharacterData } from "./utils/constants";
 import myEpicGame from "./utils/MyEpicGame.json";
 
 import SelectCharacter from "./Components/SelectCharacter";
+import Arena from "./Components/Arena";
 
 const App = () => {
   // State
@@ -76,9 +77,6 @@ const App = () => {
 
   // Render Methods
   const renderContent = () => {
-    /*
-     * Scenario #1
-     */
     if (!currentAccount) {
       return (
         <div className="connect-wallet-container">
@@ -94,11 +92,15 @@ const App = () => {
           </button>
         </div>
       );
-      /*
-       * Scenario #2
-       */
     } else if (currentAccount && !characterNFT) {
       return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+      /*
+       * If there is a connected wallet and characterNFT, it's time to battle!
+       */
+    } else if (currentAccount && characterNFT) {
+      return (
+        <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />
+      );
     }
   };
 
