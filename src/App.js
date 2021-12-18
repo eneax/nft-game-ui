@@ -7,11 +7,13 @@ import myEpicGame from "./utils/MyEpicGame.json";
 
 import SelectCharacter from "./Components/SelectCharacter";
 import Arena from "./Components/Arena";
+import LoadingIndicator from "./Components/LoadingIndicator";
 
 const App = () => {
   // State
   const [currentAccount, setCurrentAccount] = React.useState(null);
   const [characterNFT, setCharacterNFT] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   // Actions
   const checkNetwork = async () => {
@@ -30,6 +32,7 @@ const App = () => {
 
       if (!ethereum) {
         console.log("Make sure you have MetaMask!");
+        setIsLoading(false);
         return;
       } else {
         console.log("We have the ethereum object", ethereum);
@@ -47,6 +50,8 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
+
+    setIsLoading(false);
   };
 
   const connectWalletAction = async () => {
@@ -77,6 +82,10 @@ const App = () => {
 
   // Render Methods
   const renderContent = () => {
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
+
     if (!currentAccount) {
       return (
         <div className="connect-wallet-container">
@@ -94,9 +103,6 @@ const App = () => {
       );
     } else if (currentAccount && !characterNFT) {
       return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
-      /*
-       * If there is a connected wallet and characterNFT, it's time to battle!
-       */
     } else if (currentAccount && characterNFT) {
       return (
         <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />
@@ -106,13 +112,12 @@ const App = () => {
 
   React.useEffect(() => {
     checkNetwork();
+
+    setIsLoading(true);
     checkIfWalletIsConnected();
   }, []);
 
   React.useEffect(() => {
-    /*
-     * The function we will call that interacts with out smart contract
-     */
     const fetchNFTMetadata = async () => {
       console.log("Checking for Character NFT on address:", currentAccount);
 
@@ -124,18 +129,15 @@ const App = () => {
         signer
       );
 
-      const txn = await gameContract.checkIfUserHasNFT();
-      if (txn.name) {
+      const characterNFT = await gameContract.checkIfUserHasNFT();
+      if (characterNFT.name) {
         console.log("User has character NFT");
-        setCharacterNFT(transformCharacterData(txn));
-      } else {
-        console.log("No character NFT found");
+        setCharacterNFT(transformCharacterData(characterNFT));
       }
+
+      setIsLoading(false);
     };
 
-    /*
-     * We only want to run this, if we have a connected wallet
-     */
     if (currentAccount) {
       console.log("CurrentAccount:", currentAccount);
       fetchNFTMetadata();
